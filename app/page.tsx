@@ -209,6 +209,7 @@ export default function TextSearchEngine() {
   }
 
   const formatNumber = (num: number) => {
+    if (typeof num !== "number" || isNaN(num)) return "0"
     return num.toFixed(4)
   }
 
@@ -311,14 +312,24 @@ export default function TextSearchEngine() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {tableTFIDF.map((row: [string, ...number[]], index) => (
-                      <TableRow key={index}>
-                        <TableCell className="font-medium">{row[0]}</TableCell>
-                        {row.slice(1).map((cell: number, cellIndex) => (
-                          <TableCell key={cellIndex}>{formatNumber(cell)}</TableCell>
-                        ))}
+                    {tableTFIDF.length > 0 ? (
+                      tableTFIDF.map((row: [string, ...number[]], index) => (
+                        <TableRow key={index}>
+                          <TableCell className="font-medium">{row[0]}</TableCell>
+                          {row.slice(1).map((cell: number, cellIndex) => (
+                            <TableCell key={cellIndex}>
+                              {typeof cell === "number" ? formatNumber(cell) : cell}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={Object.keys(uploadedFiles).length + 1} className="text-center py-4">
+                          No terms indexed yet
+                        </TableCell>
                       </TableRow>
-                    ))}
+                    )}
                   </TableBody>
                 </Table>
               </ScrollArea>
